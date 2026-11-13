@@ -1,0 +1,335 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"><title>Белкин лес — пять уровней</title><style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#152415;color:#fff;font-family:system-ui,'Segoe UI',sans-serif}body{display:grid;place-items:center;padding:8px;overflow-x:hidden}.shell{width:min(100%,1280px,calc((100dvh - 16px)*16/9));position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:17px;background:#193722;box-shadow:0 12px 40px #0008;user-select:none;touch-action:manipulation}canvas{display:block;width:100%;height:100%}.hud{position:absolute;inset:0 0 auto;display:flex;align-items:flex-start;justify-content:space-between;padding:1.3% 1.7%;gap:10px;pointer-events:none}.pill{border:2px solid #e6ba62;background:linear-gradient(#845022ef,#4f2a12ef);border-radius:30px;box-shadow:0 3px 0 #30200b,0 4px 12px #0007;font-size:clamp(12px,2.1vw,24px);padding:.35em .8em;white-space:nowrap;font-weight:800;text-shadow:1px 2px #452000}.hudright{display:flex;gap:7px;align-items:center}.hud button{pointer-events:auto}.sound{border:2px solid #e6ba62;background:#693b17ed;color:#fff;border-radius:50%;width:clamp(32px,5vw,56px);height:clamp(32px,5vw,56px);font-size:clamp(15px,2.5vw,25px);cursor:pointer}.controls{position:absolute;bottom:3%;left:3%;right:3%;display:flex;justify-content:space-between;align-items:end;pointer-events:none}.movegroup{display:flex;gap:1.2vw}.gamebtn{pointer-events:auto;width:clamp(52px,9vw,104px);height:clamp(52px,9vw,104px);border-radius:50%;border:3px solid #ffedb3;color:#ffeab0;text-shadow:0 2px #855012;background:linear-gradient(160deg,#a26b35d9,#553111eb);box-shadow:0 5px 0 #42250e,0 4px 15px #0005;font-weight:900;font-size:clamp(25px,4.7vw,53px);cursor:pointer;touch-action:none;display:flex;align-items:center;justify-content:center}.gamebtn{-webkit-tap-highlight-color:transparent}.gamebtn:active{transform:translateY(3px);box-shadow:0 1px 0 #42250e}.overlay{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(#0922184d,#102b20ad);text-align:center;padding:14px}.panel{background:linear-gradient(140deg,#875224f2,#482b16f7);border:3px solid #f3d18c;border-radius:22px;box-shadow:0 12px 36px #0009;padding:clamp(16px,3vw,38px);max-width:min(680px,88%)}h1{display:flex;align-items:center;justify-content:center;gap:clamp(9px,1.5vw,18px);margin:0 0 10px;font-family:Georgia,serif;font-size:clamp(25px,5vw,55px);color:#ffe099;text-shadow:2px 3px #50240b}.menu-portrait{width:clamp(52px,9.3vw,112px);height:clamp(52px,9.3vw,112px);object-fit:cover;object-position:center;border-radius:50%;border:3px solid #f7cf79;box-shadow:0 2px 12px #351b0a88;flex-shrink:0}.panel p{line-height:1.45;font-size:clamp(12px,1.9vw,21px);margin:7px 0 12px}.start{background:linear-gradient(#aefb64,#3d9d21);border:3px solid #ffdf8b;color:#183d0c;font-weight:900;border-radius:18px;padding:10px 33px;font-size:clamp(17px,2.4vw,27px);cursor:pointer;box-shadow:0 4px 0 #215a14}.start:active{transform:translateY(2px)}.hint{font-size:clamp(11px,1.4vw,16px)!important;color:#fff0c5}.tag{position:absolute;bottom:1%;left:50%;transform:translateX(-50%);font-size:clamp(10px,1vw,13px);opacity:.7;white-space:nowrap;pointer-events:none}.gamepad-status{position:absolute;left:50%;top:9%;transform:translateX(-50%);pointer-events:none;border:1px solid #f8dfa0;border-radius:20px;background:#26442cdd;color:#fff5d5;padding:4px 12px;font-size:clamp(11px,1.4vw,16px);font-weight:700;white-space:nowrap;display:none;z-index:2}.run-clock{position:absolute;top:11%;left:1.7%;z-index:1;pointer-events:none;background:#56351bdb;border:1px solid #edc477;border-radius:14px;padding:5px 11px;font-size:clamp(10px,1.4vw,16px);font-weight:750;color:#ffefcc;text-shadow:0 1px 3px #000}.records{color:#ffe2a0;margin:9px 0 12px;font-size:clamp(13px,1.8vw,19px);font-weight:750}.rotate{display:none}@media (orientation:portrait) and (max-width:700px){.shell{aspect-ratio:16/9}.rotate{display:block;text-align:center;margin-top:7px;font-size:13px;color:#d5d5ce}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* Tablet/phone landscape: size the board by both width and usable display height.
+   Safe-area insets keep the screen clear of notches and home indicators. */
+@media (orientation:landscape) and (pointer:coarse){
+ html,body{min-height:100%;}
+ body{padding:max(4px,env(safe-area-inset-top)) max(4px,env(safe-area-inset-right)) max(4px,env(safe-area-inset-bottom)) max(4px,env(safe-area-inset-left));}
+ .shell{width:min(100%,1280px,calc((100dvh - 10px)*16/9));border-radius:10px;}
+ .gamebtn{width:clamp(48px,9.5vw,100px);height:clamp(48px,9.5vw,100px);}
+ .sound{min-width:42px;min-height:42px;}
+ .panel{padding:clamp(7px,2vh,22px);max-width:min(820px,94%);max-height:96%;overflow-y:auto;overscroll-behavior:contain;}
+ .panel p{margin:4px 0 7px;line-height:1.25;}
+ h1{margin-bottom:5px;}
+ .records{margin:3px 0 6px;}
+ .hint{line-height:1.3;}
+ .start{padding:6px 24px;}
+}
+@media (orientation:portrait) and (pointer:coarse){
+ .rotate{display:block;text-align:center;margin:10px 0;font-size:clamp(14px,3vw,20px);color:#fff1bd;font-weight:700;}
+}
+</style></head><body><div><div class="shell" id="shell"><canvas id="game" width="1280" height="720" aria-label="Белочка бежит по лесной тропинке; перемещайся между тремя дорожками"></canvas><div class="hud"><div class="pill" id="lives">❤️❤️❤️</div><div class="pill" id="score">🌰 0 / 15</div><div class="hudright"><div class="pill" id="levelBadge">🌳 Уровень 1</div><button class="sound" id="musicBtn" title="Музыка" aria-label="Включить или выключить музыку">♫</button><button class="sound" id="sfxBtn" title="Эффекты" aria-label="Включить или выключить эффекты">🔊</button><button class="sound" id="pauseBtn" title="Пауза" aria-label="Пауза">Ⅱ</button></div></div><div class="run-clock" id="runClock" aria-live="off">⏱ 00:00 · 🏆 Лучшее: —</div><div class="gamepad-status" id="gamepadStatus" role="status" aria-live="polite"></div><div class="controls"><div class="movegroup"><button type="button" class="gamebtn" id="left" aria-label="Влево">←</button><button type="button" class="gamebtn" id="right" aria-label="Вправо">→</button></div><button type="button" class="gamebtn" id="jump" aria-label="Прыгнуть">↑</button></div><div class="overlay" id="overlay"><div class="panel"><h1 id="title"><img class="menu-portrait" src="assets/squirrel-face-centered.png" alt="Улыбающаяся белочка">Белкин лес</h1><p id="description">Белочка бежит <b>в глубину леса</b>. Собери 15 желудей, уворачивайся от хищников и перепрыгивай препятствия!</p><p class="hint" id="instruction">← → — смена дорожки · ↑ или пробел — прыжок<br>На телефоне используй кнопки на экране.<br>🎮 Геймпад: стик или крестовина — движение, A / ✕ — прыжок, Start / Options — пауза.</p><div class="records" id="records">🏆 Лучшее время: —</div><button class="start" id="start">▶ Играть</button><div id="levelSelectWrap" style="margin-top:12px"><label for="levelSelect" class="hint">Начать с открытого уровня: </label><select id="levelSelect" aria-label="Выбрать открытый уровень" style="font-size:16px;border-radius:9px;padding:6px;background:#fff3cb;color:#4a2b10;border:2px solid #dda847"></select></div></div></div><div class="tag">Белкин лес · 5 лесных приключений · 🦉 подарок раз за уровень</div></div><div class="rotate">📱 Для удобной игры поверни телефон горизонтально.</div></div>
+<script>
+(()=>{'use strict';
+const W=1280,H=720,MAXZ=100;
+const OWL_GIFTS=['heart','shield','gold','magnet','star'];
+const GIFT_LABELS={heart:'❤️ Сердечко!',shield:'🛡️ Щит!',gold:'💛 Золотой жёлудь!',magnet:'🧲 Магнит!',star:'⭐ Волшебная звезда!'};
+const LEVELS=[{name:'Солнечная роща',target:15,speed:34,spawn:1.03,foxChance:.2},{name:'Грибной лес',target:25,speed:38,spawn:.94,foxChance:.43},{name:'Хвойный лес',target:35,speed:42,spawn:.82,foxChance:.42},{name:'Туманный лес',target:45,speed:44,spawn:.80,foxChance:.4},{name:'Ночной лес',target:60,speed:47,spawn:.74,foxChance:.4}];
+let level=0;function config(){return LEVELS[level];}
+const cv=document.getElementById('game'),cx=cv.getContext('2d');
+let highestUnlocked=0;
+try{highestUnlocked=Math.max(0,Math.min(4,Number(localStorage.getItem('belkin-best-level'))||0));}catch(e){}
+let runTime=0,bestTime=null,lastTime=null,completeRun=false;
+try{const b=Number(localStorage.getItem('belkin-best-total-seconds'));if(b>0&&Number.isFinite(b))bestTime=b;const l=Number(localStorage.getItem('belkin-last-total-seconds'));if(l>0&&Number.isFinite(l))lastTime=l;}catch(e){}
+function timeText(t){if(t==null||!Number.isFinite(t))return '—';const n=Math.max(0,Math.floor(t)),mm=Math.floor(n/60),ss=n%60;return (mm>=60?String(Math.floor(mm/60)).padStart(2,'0')+':':'')+String(mm%60).padStart(2,'0')+':'+String(ss).padStart(2,'0');}
+function updateClock(){$('runClock').textContent='⏱ '+timeText(runTime)+'  ·  🏆 Лучшее: '+timeText(bestTime);$('records').textContent='🏆 Лучшее время: '+timeText(bestTime)+(lastTime!==null?'  ·  Последний результат: '+timeText(lastTime):'');}
+const levelSelect=document.getElementById('levelSelect'),levelSelectWrap=document.getElementById('levelSelectWrap');
+function refreshLevels(){
+ levelSelect.innerHTML='';
+ for(let n=0;n<=highestUnlocked;n++){
+  const opt=document.createElement('option'); opt.value=n;
+  opt.textContent=(n+1)+'. '+LEVELS[n].name;
+  levelSelect.appendChild(opt);
+ }
+ levelSelect.value=String(Math.min(level,highestUnlocked));
+}
+
+const $=id=>document.getElementById(id),overlay=$('overlay'),title=$('title'),desc=$('description'),instruction=$('instruction'),start=$('start');
+const imgs={};for(const [k,n] of Object.entries({road:'forest-road.jpg',road2:'forest-road-level2.jpg',hero:'squirrel-back.png',celebrate:'squirrel-celebrate.png',acorn:'acorn-1.png',fox:'fox.png',wolf:'wolf.png',bear:'bear.png'})){let i=new Image();i.src='assets/'+n;imgs[k]=i;}
+const owlFrames=Array.from({length:6},(_,n)=>{const i=new Image();i.src='assets/owl-'+(n+1)+'.png';return i;});
+const audio={music:new Audio('assets/music.ogg'),coin:new Audio('assets/coin.ogg'),jump:new Audio('assets/jump.ogg'),hit:new Audio('assets/hit.ogg'),win:new Audio('assets/win.ogg')};audio.music.loop=true;audio.music.volume=.24;
+let magnetDemo=[],localLabels=[],owlDroplet=null;
+let musicOn=true,sfxOn=true,state='menu',lane=1,visualLane=1,hearts=3,score=0,objects=[],last=0,spawn=0,travel=0,run=0,jumpTime=-1,invuln=0,shake=0,particles=[],seed=7,celebrationTime=0,shield=0,bonuses=0,magnet=0,owlTime=-1,owlGifted=false,owlRoadGifts=0,owlGiftTimer=0,owlMessage='',owlMessageTime=0,starTime=0,spareHeart=0;
+function random(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}
+function sound(key){if(!sfxOn)return;try{let a=audio[key];a.pause();a.currentTime=0;a.volume=key==='hit'?.65:.5;a.play().catch(()=>{});}catch(e){}}
+function updateHud(){$('levelBadge').textContent='🌳 Уровень '+(level+1);$('lives').textContent='❤️'.repeat(hearts)+'🖤'.repeat(3-hearts)+(shield?' 🛡️':'')+(magnet>0?' 🧲':'')+(starTime>0?' ⭐':'')+(spareHeart?' ❤️ запас ×'+spareHeart:'');$('score').textContent='🌰 '+score+' / '+config().target;$('musicBtn').textContent=musicOn?'♫':'♪̸';$('sfxBtn').textContent=sfxOn?'🔊':'🔇';$('pauseBtn').textContent=state==='paused'?'▶':'Ⅱ';updateClock();}
+function panel(head,body,button){levelSelectWrap.style.display=state==='menu'?'block':'none';$('records').style.display=state==='menu'?'block':'none';if(state==='menu')refreshLevels();title.textContent=head;if(state==='menu'){title.textContent='';const portrait=document.createElement('img');portrait.src='assets/squirrel-face-centered.png';portrait.className='menu-portrait';portrait.alt='Улыбающаяся белочка';title.append(portrait,document.createTextNode('Белкин лес'));}desc.textContent=body;instruction.style.display=state==='menu'?'block':'none';start.textContent=button;overlay.style.display='grid';}
+function startGame(nextLevel=0,mode='new'){const preserve=mode==='next'||mode==='retry';if(!preserve){runTime=0;completeRun=nextLevel===0;}level=Math.max(0,Math.min(4,nextLevel));levelSelectWrap.style.display='none';state='playing';lane=1;visualLane=1;if(!preserve||mode==='retry')hearts=3;score=0;objects=[];particles=[];last=0;spawn=.8;travel=0;run=0;jumpTime=-1;invuln=0;shake=0;shield=0;bonuses=0;magnet=0;owlTime=-1;owlGifted=false;owlRoadGifts=0;owlGiftTimer=0;owlMessage='';owlMessageTime=0;starTime=0;if(!preserve)spareHeart=0;magnetDemo=[];localLabels=[];owlDroplet=null;seed=791;overlay.style.display='none';updateHud();if(musicOn)audio.music.play().catch(()=>{});}
+function celebrate(){state='celebrating';shake=0;celebrationTime=0,shield=0,bonuses=0,magnet=0;objects=[];sound('win');audio.music.pause();updateHud();}
+function celebrationEnd(){state='won';panel(level===4?'🏆 Ура! Все пять уровней пройдены!':'🌟 Ура! Уровень '+(level+1)+' пройден!',
+  'Белочка собрала '+config().target+' желудей в лесу «'+config().name+'»! '+(level+1<LEVELS.length?'Впереди новое приключение — «'+LEVELS[level+1].name+'»! Сохранено жизней: '+(hearts+spareHeart)+'.':('Время всех уровней: '+timeText(runTime)+'. 🏆 Лучшее время: '+timeText(bestTime)+(completeRun?'!':' (рекорд засчитывается при прохождении с 1-го уровня).'))),
+  level+1<LEVELS.length?'➡ Уровень '+(level+2):'↻ Сыграть ещё');updateHud();}
+function finish(win){if(win){highestUnlocked=Math.min(4,Math.max(highestUnlocked,level+1));try{localStorage.setItem('belkin-best-level',String(highestUnlocked));}catch(e){}if(level===4&&completeRun){lastTime=runTime;if(bestTime===null||runTime<bestTime)bestTime=runTime;try{localStorage.setItem('belkin-last-total-seconds',String(lastTime));localStorage.setItem('belkin-best-total-seconds',String(bestTime));}catch(e){}}celebrate();}
+else{state='lost';shake=0;audio.music.pause();panel('🐿️ Попробуем ещё!','У белочки закончились жизни. Уворачивайся от зверей и прыгай через брёвна.','↻ Повторить уровень');updateHud();}}
+function togglePause(){if(state==='playing'){state='paused';audio.music.pause();panel('⏸ Пауза','Белочка отдыхает на лесной тропинке.','▶ Продолжить');}else if(state==='paused'){state='playing';overlay.style.display='none';last=0;if(musicOn)audio.music.play().catch(()=>{});}updateHud();}
+function move(dir){if(state!=='playing')return;lane=Math.max(0,Math.min(2,lane+dir));}
+function jump(){if(state!=='playing')return;if(jumpTime<0){jumpTime=0;sound('jump');}}
+$('left').addEventListener('pointerdown',e=>{e.preventDefault();move(-1)});$('right').addEventListener('pointerdown',e=>{e.preventDefault();move(1)});$('jump').addEventListener('pointerdown',e=>{e.preventDefault();jump()});
+document.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','Space','KeyA','KeyD','KeyW','Escape'].includes(e.code))return;if(['ArrowLeft','ArrowRight','ArrowUp','Space'].includes(e.code))e.preventDefault();if(e.repeat)return;if(e.code==='Escape'){togglePause();return;}if(e.code==='ArrowLeft'||e.code==='KeyA')move(-1);if(e.code==='ArrowRight'||e.code==='KeyD')move(1);if(['ArrowUp','Space','KeyW'].includes(e.code))jump();});
+// Геймпады: стандартное расположение кнопок (Xbox, PlayStation и совместимые).
+// Опрос идёт внутри уже существующего игрового кадра — отдельного таймера нет.
+const gpStatus=$('gamepadStatus');
+let gpName='',gpPrevious={left:false,right:false,jump:false,start:false,confirm:false};
+function pollGamepad(){
+ if(typeof navigator.getGamepads!=='function')return;
+ let pad=null;
+ try{pad=Array.from(navigator.getGamepads()||[]).find(p=>p&&p.connected&&p.mapping==='standard')||null;}catch(e){return;}
+ if(!pad){
+  if(gpName){gpName='';gpStatus.style.display='none';}
+  gpPrevious={left:false,right:false,jump:false,start:false,confirm:false};
+  return;
+ }
+ if(gpName!==pad.id){gpName=pad.id;gpStatus.textContent='🎮 Геймпад подключён';gpStatus.style.display='block';}
+ const pressed=i=>Boolean(pad.buttons[i]&&pad.buttons[i].pressed);
+ const axis=pad.axes&&Number.isFinite(pad.axes[0])?pad.axes[0]:0;
+ const now={left:pressed(14)||axis<-.55,right:pressed(15)||axis>.55,jump:pressed(0)||pressed(1)||pressed(2)||pressed(3),start:pressed(9),confirm:pressed(0)};
+ // Смена дорожки срабатывает один раз за наклон стика или нажатие крестовины.
+ // Стик необходимо вернуть в центр для следующего перемещения.
+ if(now.left&&!gpPrevious.left)move(-1);
+ if(now.right&&!gpPrevious.right)move(1);
+ if(now.jump&&!gpPrevious.jump)jump();
+ if(now.start&&!gpPrevious.start){
+  if(state==='playing'||state==='paused')togglePause();
+  else if(state==='menu'||state==='won'||state==='lost')start.click();
+ }else if(now.confirm&&!gpPrevious.confirm&&state!=='playing'&&state!=='celebrating'){
+  start.click();
+ }
+ gpPrevious=now;
+}
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&state==='playing')togglePause();});
+$('pauseBtn').onclick=togglePause;$('musicBtn').onclick=()=>{musicOn=!musicOn;if(musicOn&&state==='playing')audio.music.play().catch(()=>{});else audio.music.pause();updateHud();};$('sfxBtn').onclick=()=>{sfxOn=!sfxOn;updateHud();};start.onclick=()=>{if(state==='paused')togglePause();else if(state==='won'){if(level+1<LEVELS.length)startGame(level+1,'next');else startGame(0,'new');}else if(state==='menu')startGame(Number(levelSelect.value)||0);else if(state==='lost')startGame(level,'retry');else startGame(level);};
+function project(z,l){let t=Math.max(0,Math.min(1,1-z/MAXZ)),p=t*t,y=235+p*490;let half=36+p*330;return{x:W/2+(l-1)*half*.78,y,scale:.16+Math.pow(t,1.65)*.95,t};}
+function spawnObj(){
+ // Each level introduces ONE special gift through the owl. The path receives
+ // only two more gifts of that type, not an unlimited stream of bonuses.
+ let l=Math.floor(random()*3),r=random(),kind;
+ if(level===0){kind=r<.77?'acorn':(r<.93?'log':'fox');}
+ else if(level===1){kind=r<.71?'acorn':(r<.88?'log':(random()<.6?'fox':'wolf'));}
+ else if(level===2){kind=r<.59?'acorn':(r<.76?'cone':(r<.87?'log':['fox','wolf','bear'][Math.floor(random()*3)]));}
+ else if(level===3){kind=r<.55?'acorn':(r<.72?'cone':(r<.82?'log':['fox','wolf','bear','snake'][Math.floor(random()*4)]));}
+ else {kind=r<.53?'acorn':(r<.72?'cone':(r<.82?'log':['fox','wolf','bear','snake'][Math.floor(random()*4)]));}
+ let side=['fox','wolf','bear','snake'].includes(kind)?(random()<.5?-1:1):0;
+ let o={kind,l,z:100,done:false,wiggle:random()*6.283,side,originalLane:l,age:0};
+ if(level>=2&&kind==='cone'){o.drift=(random()<.5?-1:1)*(.24+random()*.20);}
+ if(level>=2&&kind==='acorn'&&random()<.45){o.drift=(random()<.5?-1:1)*(.12+random()*.15);}
+ objects.push(o);
+ if(kind==='acorn'&&random()<.22)objects.push({kind:'acorn',l,z:124,done:false,wiggle:random()*6.28,age:0});
+}
+function showLabel(text,color='#fff0b2'){
+ localLabels.push({text,color,t:2.1,life:2.1});
+}
+function giveAcorns(amount){
+ let old=score;score=Math.min(config().target,score+amount);
+ if(score!==old){sound('coin');particlesAt(project(4,lane).x,505,'coin');updateHud();}
+ if(score>=config().target)finish(true);
+}
+function launchMagnetDemo(){
+ // Children immediately see three acorns flying TO the squirrel, rather than
+ // only an unexplained magnet icon. Each acorn scores on arrival.
+ magnetDemo=[];
+ for(let i=0;i<3;i++){
+   let initial=project(31+i*9,(i%3));
+   magnetDemo.push({x:initial.x,y:initial.y-35,age:-i*.17,duration:.9+i*.12,done:false});
+ }
+}
+function grantGift(kind){
+ if(kind==='heart'){
+   if(hearts<3)hearts++;else spareHeart=Math.min(9,spareHeart+1);
+   showLabel('❤️ +1 жизнь!','#ffdddf');
+ }else if(kind==='shield'){
+   shield=1;showLabel('🛡️ Щит защищает!','#d6faff');
+ }else if(kind==='gold'){
+   showLabel('🌰 +5 желудей!','#fff0a0');giveAcorns(5);
+ }else if(kind==='magnet'){
+   magnet=9;showLabel('🧲 Жёлуди ко мне!','#eaffff');launchMagnetDemo();
+ }else if(kind==='star'){
+   starTime=7;showLabel('⭐ Волшебная защита!','#fff0a0');
+ }
+ bonuses++;sound('coin');particlesAt(project(4,lane).x,505,'coin');updateHud();
+}
+function updateEffects(dt){
+ for(const l of localLabels)l.t-=dt;
+ localLabels=localLabels.filter(l=>l.t>0);
+ for(const a of magnetDemo){
+   a.age+=dt;
+   if(a.done||a.age<0)continue;
+   if(a.age>=a.duration){a.done=true;if(state==='playing')giveAcorns(1);}
+ }
+ magnetDemo=magnetDemo.filter(a=>!a.done);
+}
+function owlUpdate(dt){
+ owlMessageTime=Math.max(0,owlMessageTime-dt);
+ if(!owlGifted){
+  if(run>7 && owlTime<0)owlTime=0;
+  if(owlTime>=0){owlTime+=dt;
+   if(owlTime>=1.8){
+    owlGifted=true;owlGiftTimer=4;owlMessage=GIFT_LABELS[OWL_GIFTS[level]];owlMessageTime=0;
+    owlDroplet={type:OWL_GIFTS[level],age:0,duration:.75};
+   }
+  }
+ }else if(owlRoadGifts<2){
+  owlGiftTimer-=dt;
+  if(owlGiftTimer<=0){
+   let kind=OWL_GIFTS[level];
+   objects.push({kind,l:Math.floor(random()*3),z:100,done:false,wiggle:random()*6.28,age:0});
+   owlRoadGifts++;owlGiftTimer=owlRoadGifts===1?8:999;
+  }
+ }
+}
+function objectLane(o){
+ if(level<2)return o.l;
+ if(o.kind==='cone')return Math.max(-.15,Math.min(2.15,o.l+Math.sin(o.age*2.6+o.wiggle)*.35));
+ if(o.kind==='acorn'&&o.drift)return Math.max(0,Math.min(2,o.l+Math.sin(o.age*2.2+o.wiggle)*.45));
+ if(['fox','wolf','bear','snake'].includes(o.kind)){
+   let approach=Math.max(0,Math.min(1,(100-o.z)/75));
+   return o.l+o.side*(1-approach)*1.95;
+ }
+ return o.l;
+}
+function particlesAt(x,y,type){for(let n=0;n<9;n++)particles.push({x,y,vx:(random()-.5)*190,vy:(random()-.7)*160,t:.5,type});}
+function step(dt){runTime+=dt;run+=dt;travel+=dt*30;updateEffects(dt);if(owlDroplet){owlDroplet.age+=dt;if(owlDroplet.age>=owlDroplet.duration){let gift=owlDroplet.type;owlDroplet=null;grantGift(gift);}}starTime=Math.max(0,starTime-dt);owlUpdate(dt);if(state!=='playing')return;visualLane+=(lane-visualLane)*Math.min(1,dt*11);spawn-=dt;if(magnet>0){magnet=Math.max(0,magnet-dt);if(magnet===0)updateHud();}invuln=Math.max(0,invuln-dt);shake=Math.max(0,shake-dt*8);if(jumpTime>=0){jumpTime+=dt;if(jumpTime>.9)jumpTime=-1;}if(spawn<=0){spawn=config().spawn+random()*.46;spawnObj();}
+for(let o of objects){o.age+=dt;o.z-=dt*config().speed;if(!o.done&&o.z<=7){o.done=true;
+ let collide=Math.abs(objectLane(o)-lane)<.52;
+ if(magnet>0&&(o.kind==='acorn'||o.kind==='gold')&&Math.abs(objectLane(o)-lane)<1.6)collide=true;
+ if(collide){let inAir=jumpTime>=0&&Math.sin(Math.PI*jumpTime/.9)>.46;
+ if(o.kind==='acorn'||o.kind==='gold'){
+  let gain=o.kind==='gold'?5:1;score=Math.min(config().target,score+gain);sound('coin');particlesAt(project(4,lane).x,505,'coin');updateHud();if(score>=config().target){finish(true);break;}
+ }else if(['heart','shield','magnet','star'].includes(o.kind)){
+  grantGift(o.kind);
+ }else if(!inAir&&invuln<=0&&starTime<=0){
+  if(shield){shield=0;invuln=1.2;sound('hit');particlesAt(project(4,lane).x,550,'coin');}
+  else{if(spareHeart)spareHeart--;else hearts--;invuln=1.9;shake=.6;sound('hit');particlesAt(project(4,lane).x,550,'hit');if(hearts<=0){finish(false);break;}}
+  updateHud();
+ }
+ }}}
+
+objects=objects.filter(o=>o.z>-12&&!o.done);for(const p of particles){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=200*dt;p.t-=dt;}particles=particles.filter(p=>p.t>0);
+}
+function imgDraw(img,x,y,w,h){if(img.complete&&img.naturalWidth)cx.drawImage(img,x-w/2,y-h,w,h);}
+function scenery(){// Camera subtly moves and the road's perspective stripes flow toward us.
+let b=level===0?imgs.road:imgs.road2;if(b.complete&&b.naturalWidth){let zoom=1.02+.018*Math.sin(run*1.3),ww=W*zoom,hh=H*zoom;cx.drawImage(b,(W-ww)/2,(H-hh)/2,ww,hh);}else{cx.fillStyle='#355d28';cx.fillRect(0,0,W,H);}
+if(level>=2){cx.fillStyle=level===3?'rgba(20,38,59,.32)':level===4?'rgba(21,30,72,.19)':'rgba(10,56,40,.20)';cx.fillRect(0,0,W,H);for(let j=0;j<11;j++){let z=((j*18-travel*1.15)%130+130)%130;if(z>98)continue;let p=project(z,1),ss=p.scale,side=j%2?-1:1,x=W/2+side*(90+p.t*p.t*525),size=125*ss;cx.fillStyle='#123d2c';cx.beginPath();cx.moveTo(x,p.y-size*1.45);cx.lineTo(x-size*.55,p.y);cx.lineTo(x+size*.55,p.y);cx.fill();cx.fillStyle='#205c37';cx.beginPath();cx.moveTo(x,p.y-size*1.2);cx.lineTo(x-size*.45,p.y-size*.18);cx.lineTo(x+size*.45,p.y-size*.18);cx.fill();}}
+if(level===1){cx.fillStyle='rgba(29,22,57,.09)';cx.fillRect(0,0,W,H);for(let j=0;j<13;j++){let z=((j*19-travel*1.1)%120+120)%120;if(z>100)continue;let p=project(z,1),ss=p.scale,side=j%2?-1:1,x=W/2+side*(66+p.t*p.t*460);cx.fillStyle='#d84d3d';cx.beginPath();cx.ellipse(x,p.y-11*ss,18*ss,9*ss,0,Math.PI,Math.PI*2);cx.fill();cx.fillStyle='#fff5c8';cx.fillRect(x-3*ss,p.y-12*ss,6*ss,13*ss);cx.fillStyle='#ffedd4';cx.beginPath();cx.arc(x-6*ss,p.y-17*ss,2*ss,0,7);cx.arc(x+5*ss,p.y-18*ss,2*ss,0,7);cx.fill();}}
+if(level===4){
+ // Волшебная ночь: полупрозрачный синий свет, но дорога остаётся хорошо видна.
+ let night=cx.createLinearGradient(0,0,0,H);
+ night.addColorStop(0,'rgba(11,16,61,.66)');
+ night.addColorStop(.52,'rgba(24,19,71,.38)');
+ night.addColorStop(1,'rgba(12,18,49,.24)');
+ cx.fillStyle=night;cx.fillRect(0,0,W,H);
+ // Летящие светлячки делают лес живым.
+ for(let i=0;i<36;i++){
+  let xx=((i*257+Math.sin(run*.47+i)*52)%1400)-60;
+  let yy=105+(i*89)%500+Math.sin(run*.8+i*1.9)*12;
+  let pulse=.4+.25*Math.sin(run*2+i);
+  cx.globalAlpha=pulse;cx.shadowColor='#d8f7ff';cx.shadowBlur=15;
+  cx.fillStyle=i%3===0?'#aceaff':'#fff2a4';cx.beginPath();cx.arc(xx,yy,2+(i%3),0,7);cx.fill();
+ }cx.globalAlpha=1;cx.shadowBlur=0;
+}
+if(level===3){
+ // Мягкий туман меняется по времени, но дорожка остаётся хорошо видна.
+ for(let i=0;i<7;i++){
+  let yy=210+i*69+Math.sin(run*.7+i)*16;
+  let fog=cx.createLinearGradient(0,yy-53,0,yy+53);
+  let a=.035+.023*Math.sin(run*.45+i*.7)**2;
+  fog.addColorStop(0,'rgba(212,238,255,0)');fog.addColorStop(.5,'rgba(212,238,255,'+a+')');fog.addColorStop(1,'rgba(212,238,255,0)');
+  cx.fillStyle=fog;cx.fillRect(0,yy-53,W,106);
+ }
+ for(let i=0;i<18;i++){
+   let xx=((i*251+run*17)%1500)-100,yy=140+i*29%470;
+   cx.globalAlpha=.22+.18*Math.sin(run*1.3+i);
+   cx.fillStyle=i%2?'#b5e5fa':'#fff1ac';cx.beginPath();cx.arc(xx,yy,2.5+i%3,0,7);cx.fill();
+ }cx.globalAlpha=1;
+}
+// Animated gold-tinted marks on the path grow as they approach the viewer.
+for(let i=0;i<15;i++){let z=((i*13-travel*1.5)%195+195)%195;if(z>100)continue;let p=project(z,1);if(p.t<.12)continue;cx.globalAlpha=.05+p.t*.1;cx.fillStyle='#ffe7a1';cx.beginPath();cx.ellipse(p.x,p.y,90*p.t,3+7*p.t,0,0,7);cx.fill();}cx.globalAlpha=1;
+// Ferns at the sides pass by to reinforce depth.
+for(let i=0;i<12;i++){let z=((i*17-travel*1.2)%124+124)%124;if(z>100)continue;let p=project(z,1);let s=p.scale;for(let side of [-1,1]){let x=W/2+side*(43+p.t*p.t*420);cx.fillStyle=i%3?'#438b23':'#6cae33';cx.beginPath();cx.ellipse(x,p.y-16*s,6*s,27*s,side*.4,0,7);cx.fill();cx.beginPath();cx.ellipse(x+side*11*s,p.y-9*s,5*s,18*s,-side*.5,0,7);cx.fill();}}}
+function renderObject(o){let p=project(o.z,objectLane(o)),s=p.scale;if(o.kind==='acorn'||o.kind==='gold'){let bob=Math.sin(run*4+o.wiggle)*7*s;let w=(o.kind==='gold'?85:65)*s;cx.shadowColor='#ffdf4a';cx.shadowBlur=o.kind==='gold'?38*s:20*s;imgDraw(imgs.acorn,p.x,p.y-12*s+bob,w,w*1.25);cx.shadowBlur=0;if(o.kind==='gold'){cx.fillStyle='#fffa99';cx.font='bold '+Math.max(8,32*s)+'px system-ui';cx.textAlign='center';cx.fillText('+5',p.x,p.y-90*s+bob);}}else if(o.kind==='heart'){
+ cx.save();cx.translate(p.x,p.y-48*s);cx.font='bold '+Math.max(16,95*s)+'px system-ui';cx.shadowColor='#ff719e';cx.shadowBlur=24*s;cx.textAlign='center';cx.fillText('❤️',0,0);cx.restore();
+ }else if(o.kind==='star'){
+ cx.save();cx.translate(p.x,p.y-52*s);cx.shadowColor='#ffe783';cx.shadowBlur=34*s;cx.textAlign='center';cx.font='bold '+Math.max(20,100*s)+'px system-ui';cx.fillText('⭐',0,0);cx.restore();
+ }else if(o.kind==='shield'){
+ let w=84*s,h=95*s;cx.save();cx.translate(p.x,p.y-h*.7);cx.shadowColor='#7befff';cx.shadowBlur=25*s;cx.fillStyle='#4cbae5';cx.strokeStyle='#fff3ac';cx.lineWidth=5*s;cx.beginPath();cx.moveTo(0,-h*.45);cx.lineTo(w*.42,-h*.3);cx.lineTo(w*.35,h*.15);cx.quadraticCurveTo(0,h*.7,-w*.35,h*.15);cx.lineTo(-w*.42,-h*.3);cx.closePath();cx.fill();cx.stroke();cx.restore();
+ }else if(o.kind==='magnet'){
+ cx.save();cx.translate(p.x,p.y-64*s);cx.shadowColor='#7deefa';cx.shadowBlur=24*s;
+ cx.font='bold '+Math.max(18,96*s)+'px system-ui';cx.textAlign='center';cx.fillText('🧲',0,0);cx.restore();
+ }else if(o.kind==='snake'){
+ // Рисуем змею отдельно, чтобы она действительно двигалась и не требовала нового файла.
+ cx.save();cx.translate(p.x,p.y);cx.scale(s,s);
+ cx.fillStyle='#20251d66';cx.beginPath();cx.ellipse(0,0,60,11,0,0,7);cx.fill();
+ cx.lineCap='round';cx.lineJoin='round';cx.lineWidth=22;cx.strokeStyle='#245d1c';cx.beginPath();
+ cx.moveTo(-56,-12);cx.bezierCurveTo(-40,-55,8,-10,22,-35);cx.bezierCurveTo(37,-57,42,-37,42,-39);cx.stroke();
+ cx.lineWidth=10;cx.strokeStyle='#74b545';cx.beginPath();cx.moveTo(-49,-18);cx.bezierCurveTo(-30,-44,2,-14,22,-34);cx.stroke();
+ cx.fillStyle='#50972a';cx.beginPath();cx.ellipse(48,-44,25,19,-.2,0,7);cx.fill();
+ cx.fillStyle='#f6eb95';cx.beginPath();cx.arc(55,-49,6,0,7);cx.fill();cx.fillStyle='#18251a';cx.beginPath();cx.ellipse(56,-49,2,5,0,0,7);cx.fill();
+ cx.strokeStyle='#ee658a';cx.lineWidth=3;cx.beginPath();cx.moveTo(69,-38);cx.lineTo(81+Math.sin(run*9)*4,-33);cx.stroke();
+ cx.restore();
+ }else if(o.kind==='cone'){
+ let h=90*s,w=62*s;cx.save();cx.translate(p.x,p.y-h*.5);cx.rotate(Math.sin(run*6+o.wiggle)*.28);cx.fillStyle='#57301a';cx.beginPath();cx.ellipse(0,0,w*.42,h*.48,0,0,7);cx.fill();for(let i=0;i<5;i++){let yy=-h*.40+i*h*.20,xx=w*(.15+i*.045);cx.strokeStyle=i%2?'#b47c3d':'#d5a362';cx.lineWidth=7*s;cx.beginPath();cx.moveTo(-xx,yy);cx.quadraticCurveTo(0,yy+13*s,xx,yy);cx.stroke();}cx.restore();
+ }else if(o.kind==='log'){let w=145*s,h=43*s;cx.save();cx.translate(p.x,p.y);cx.fillStyle='#3c230f88';cx.beginPath();cx.ellipse(0,0,w*.52,h*.42,0,0,7);cx.fill();cx.fillStyle='#71401e';cx.strokeStyle='#c08b4c';cx.lineWidth=4*s;cx.beginPath();cx.roundRect(-w/2,-h,w,h,15*s);cx.fill();cx.stroke();cx.strokeStyle='#3e2415';cx.lineWidth=3*s;for(let q=0;q<4;q++){cx.beginPath();cx.moveTo(-w*.4,-h*.76+q*9*s);cx.lineTo(w*.38,-h*.76+q*9*s);cx.stroke();}cx.restore();}else{let img=imgs[o.kind];let w=160*s,h=132*s;cx.fillStyle='#2d251844';cx.beginPath();cx.ellipse(p.x,p.y,w*.36,8*s,0,0,7);cx.fill();imgDraw(img,p.x,p.y,w,h);}}
+function owlPosition(){
+ let t=Math.max(0,owlTime),approach=Math.min(1,t/1.25);
+ let x=120+approach*675+Math.max(0,t-2.35)*430;
+ return {x,y:160+Math.sin(t*6)*13};
+}
+function drawOwl(){
+ if(owlTime<0||owlTime>3.5)return;
+ let t=owlTime,p=owlPosition();
+ // Six real transparent PNG frames.  They gently flap their wings while
+ // the owl flies in, gives its present and leaves the screen.
+ let frame=owlFrames[Math.floor(t*8)%owlFrames.length];
+ cx.save();cx.translate(p.x,p.y);
+ cx.rotate(Math.sin(t*5)*.035);
+ cx.shadowColor='#ffe5a3';cx.shadowBlur=18;
+ imgDraw(frame,0,66,258,148);
+ cx.shadowBlur=0;cx.restore();
+}
+function drawOwlDrop(){
+ if(!owlDroplet)return;
+ let a=Math.min(1,owlDroplet.age/owlDroplet.duration),ease=a*a*(3-2*a);
+ let origin=owlPosition(),dest=project(0,visualLane);
+ let x=origin.x+(dest.x-origin.x)*ease,y=origin.y+55+(dest.y-145-origin.y-55)*ease-105*Math.sin(Math.PI*a);
+ cx.save();cx.textAlign='center';cx.shadowColor='#ffea72';cx.shadowBlur=26;
+ cx.font='bold 63px system-ui';cx.fillText(({heart:'❤️',shield:'🛡️',gold:'🌰',magnet:'🧲',star:'⭐'})[owlDroplet.type],x,y);
+ for(let i=0;i<8;i++){let q=i*Math.PI/4+run*2;cx.fillStyle='#fff1a1';cx.beginPath();cx.arc(x+Math.cos(q)*44,y+Math.sin(q)*34,3,0,7);cx.fill();}
+ cx.restore();
+}
+function drawMagnetDemo(){
+ for(const a of magnetDemo){
+  if(a.age<0)continue;
+  let t=Math.min(1,a.age/a.duration),e=t*t*(3-2*t),dest=project(0,visualLane);
+  let x=a.x+(dest.x-a.x)*e,y=a.y+(dest.y-145-a.y)*e-70*Math.sin(Math.PI*t);
+  cx.save();cx.shadowColor='#ffd149';cx.shadowBlur=25;imgDraw(imgs.acorn,x,y+25,49+(1-e)*18,54+(1-e)*17);cx.restore();
+ }
+}
+function drawLocalLabels(){
+ for(let i=0;i<localLabels.length;i++){
+  let l=localLabels[i],hero=project(0,visualLane);
+  let alpha=Math.min(1,l.t*3,(l.life-l.t)*5);
+  cx.save();cx.globalAlpha=Math.max(0,alpha);cx.font='bold 38px system-ui';cx.textAlign='center';
+  let x=hero.x,y=330-(l.life-l.t)*24-i*49;
+  cx.lineWidth=8;cx.strokeStyle='#603719';cx.strokeText(l.text,x,y);cx.fillStyle=l.color;cx.fillText(l.text,x,y);cx.restore();
+ }
+}
+function drawHero(){let p=project(0,visualLane),jumpH=jumpTime<0?0:Math.sin(Math.PI*jumpTime/.9)*140,base=636;let hw=250,hh=236;let offset=Math.sin(run*13)*2;cx.fillStyle='#1a211a55';cx.beginPath();cx.ellipse(p.x,650,76*(1-jumpH/200),15*(1-jumpH/200),0,0,7);cx.fill();if(invuln>0&&Math.floor(invuln*8)%2===0)return;cx.save();cx.translate(p.x,base-jumpH+offset);cx.rotate((visualLane-1)*.055);imgDraw(imgs.hero,0,35,hw,hh);if(shield||starTime>0){cx.strokeStyle=shield?'rgba(120,242,255,.85)':'rgba(255,238,129,.9)';cx.lineWidth=7;cx.shadowColor=shield?'#6df7ff':'#fbe577';cx.shadowBlur=28;cx.beginPath();cx.ellipse(0,-88,126,150,0,0,7);cx.stroke();}cx.restore();}
+function drawCelebration(){
+ let t=celebrationTime, x=W*.5,y=H*.75;
+ cx.save();cx.fillStyle='rgba(14,29,16,.35)';cx.fillRect(0,0,W,H);
+ let sw=Math.min(1,t/.75),cw=1-sw;
+ if(cw>0){cx.globalAlpha=cw;imgDraw(imgs.hero,x,y,280*(1-sw*.25),260);}
+ if(sw>0){cx.globalAlpha=sw;let hop=Math.max(0,Math.sin(Math.min(1,Math.max(0,t-.55)/.85)*Math.PI))*85;
+   let stretch=1+.05*Math.sin(t*16);imgDraw(imgs.celebrate,x,y-hop+22,290*stretch,305*stretch);}
+ cx.globalAlpha=1;
+ cx.fillStyle='#fff5c8';cx.textAlign='center';cx.font='bold 75px system-ui';cx.shadowColor='#503017';cx.shadowBlur=12;
+ cx.fillText('УРА!',x,130+Math.sin(t*5)*6);cx.shadowBlur=0;
+ for(let i=0;i<24;i++){let phase=i*2.4+t*2.1,rr=120+(t*60+i*13)%290;
+ cx.fillStyle=['#ffe05a','#f89d5a','#b6f271','#fff2b3'][i%4];cx.beginPath();cx.arc(x+Math.cos(phase)*rr,y-130+Math.sin(phase*1.3)*rr*.65,3+(i%4)*2,0,Math.PI*2);cx.fill();}
+ cx.restore();
+}
+function draw(){cx.clearRect(0,0,W,H);cx.save();if(state==='playing'&&shake>0)cx.translate((random()-.5)*shake*16,(random()-.5)*shake*12);scenery();objects.sort((a,b)=>b.z-a.z);for(let o of objects)if(o.z>2)renderObject(o);drawHero();if(state==='playing'){drawOwl();drawOwlDrop();}for(let o of objects)if(o.z<=2)renderObject(o);drawMagnetDemo();for(let p of particles){cx.globalAlpha=Math.min(1,p.t*2);cx.fillStyle=p.type==='coin'?'#ffe43d':'#ffb49b';cx.beginPath();cx.arc(p.x,p.y,3+p.t*8,0,7);cx.fill();}cx.globalAlpha=1;cx.restore();if(state==='playing'){drawLocalLabels();}if(state==='celebrating')drawCelebration();}
+let lastClockUpdate=-1;function loop(ts){pollGamepad();let dt=Math.min(.045,(ts-(last||ts))/1000);last=ts;if(state==='playing')step(dt);else if(state==='celebrating'){celebrationTime+=dt;if(celebrationTime>=2.8)celebrationEnd();}else run+=dt*.1;if(Math.floor(runTime*4)!==lastClockUpdate){lastClockUpdate=Math.floor(runTime*4);updateClock();}draw();requestAnimationFrame(loop);}
+refreshLevels();updateHud();requestAnimationFrame(loop);
+})();
+</script></body></html>
