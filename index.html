@@ -19,6 +19,22 @@
 @media (orientation:portrait) and (pointer:coarse){
  .rotate{display:block;text-align:center;margin:10px 0;font-size:clamp(14px,3vw,20px);color:#fff1bd;font-weight:700;}
 }
+
+/* iPhone Safari landscape: fill the usable browser viewport without side gaps.
+   Preserve the game's internal coordinate system and all existing interactions. */
+@media (orientation:landscape) and (pointer:coarse) and (max-height:650px){
+ html,body{width:100%;height:100%;min-height:0;overflow:hidden;}
+ body{display:flex;align-items:stretch;justify-content:stretch;padding:0!important;margin:0;}
+ body>div{display:flex;flex-direction:column;width:100%;height:100%;min-width:0;min-height:0;}
+ .shell{flex:1 1 auto;aspect-ratio:auto!important;width:100%!important;max-width:none!important;height:100%!important;min-height:0;min-width:0;border-radius:0;box-shadow:none;}
+ canvas{width:100%;height:100%;}
+ .rotate{display:none!important;}
+ .controls{bottom:max(2%,env(safe-area-inset-bottom));left:max(2%,env(safe-area-inset-left));right:max(2%,env(safe-area-inset-right));}
+ .hud{padding-top:max(1%,env(safe-area-inset-top));padding-left:max(1.5%,env(safe-area-inset-left));padding-right:max(1.5%,env(safe-area-inset-right));}
+ .pill{font-size:clamp(11px,1.8vw,20px);}
+ .gamebtn{width:clamp(46px,9vh,82px);height:clamp(46px,9vh,82px);font-size:clamp(24px,5vh,43px);}
+ .panel{max-height:96%;overflow-y:auto;}
+}
 </style></head><body><div><div class="shell" id="shell"><canvas id="game" width="1280" height="720" aria-label="Белочка бежит по лесной тропинке; перемещайся между тремя дорожками"></canvas><div class="hud"><div class="pill" id="lives">❤️❤️❤️</div><div class="pill" id="score">🌰 0 / 15</div><div class="hudright"><div class="pill" id="levelBadge">🌳 Уровень 1</div><button class="sound" id="musicBtn" title="Музыка" aria-label="Включить или выключить музыку">♫</button><button class="sound" id="sfxBtn" title="Эффекты" aria-label="Включить или выключить эффекты">🔊</button><button class="sound" id="pauseBtn" title="Пауза" aria-label="Пауза">Ⅱ</button></div></div><div class="run-clock" id="runClock" aria-live="off">⏱ 00:00 · 🏆 Лучшее: —</div><div class="gamepad-status" id="gamepadStatus" role="status" aria-live="polite"></div><div class="controls"><div class="movegroup"><button type="button" class="gamebtn" id="left" aria-label="Влево">←</button><button type="button" class="gamebtn" id="right" aria-label="Вправо">→</button></div><button type="button" class="gamebtn" id="jump" aria-label="Прыгнуть">↑</button></div><div class="overlay" id="overlay"><div class="panel"><h1 id="title"><img class="menu-portrait" src="assets/squirrel-face-centered.png" alt="Улыбающаяся белочка">Белкин лес</h1><p id="description">Белочка бежит <b>в глубину леса</b>. Собери 15 желудей, уворачивайся от хищников и перепрыгивай препятствия!</p><p class="hint" id="instruction">← → — смена дорожки · ↑ или пробел — прыжок<br>На телефоне используй кнопки на экране.<br>🎮 Геймпад: стик или крестовина — движение, A / ✕ — прыжок, Start / Options — пауза.</p><div class="records" id="records">🏆 Лучшее время: —</div><button class="start" id="start">▶ Играть</button><div id="levelSelectWrap" style="margin-top:12px"><label for="levelSelect" class="hint">Начать с открытого уровня: </label><select id="levelSelect" aria-label="Выбрать открытый уровень" style="font-size:16px;border-radius:9px;padding:6px;background:#fff3cb;color:#4a2b10;border:2px solid #dda847"></select></div></div></div><div class="tag">Белкин лес · 5 лесных приключений · 🦉 подарок раз за уровень</div></div><div class="rotate">📱 Для удобной игры поверни телефон горизонтально.</div></div>
 <script>
 (()=>{'use strict';
@@ -333,4 +349,3 @@ let lastClockUpdate=-1;function loop(ts){pollGamepad();let dt=Math.min(.045,(ts-
 refreshLevels();updateHud();requestAnimationFrame(loop);
 })();
 </script></body></html>
-<!-- Обновление публикации Белкин лес -->
